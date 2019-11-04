@@ -1,0 +1,68 @@
+-- Connect to the database
+USE zbeiassign2db;
+
+-- Insert data into patient table
+LOAD DATA LOCAL INFILE 'loaddatafall2019.txt' INTO TABLE patient 
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
+SELECT * FROM patient;
+INSERT INTO patient (OHIP, firstname, lastname) VALUES (250916374,"Zhiqi","Bei");
+SELECT * FROM patient;
+
+-- Insert data into doctor table
+SELECT * FROM doctor;
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES ("Bernie", "Kavorikian", "RD34", "1980-09-09", "Urologist");
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES("Joey", "Shabado", "GD56", "1960-06-24", "Podiatrist");
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES("Ross", "Clooney", "HT45", "1987-06-20", "Surgeon");
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES("Ben", "Spock", "YT67", "1955-02-20", "Pediatrician");
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES("Mandy", "Webster", "JK78", "1990-08-08", "Surgeon");
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES("Colleen", "Aziz", "SE66", "1989-08-24", "Surgeon");
+INSERT INTO doctor(firstname, lastname, licenseNum, licensed_date, specially) VALUES("April", "Bei", "ZB88", "1998-05-08", "Pediatrician");
+SELECT * FROM doctor;
+
+-- Insert data into hostipal table
+SELECT * FROM hospital;
+INSERT INTO hospital(hospital_code, name, city, province, bedsNum) VALUES ("BBC", "St.Joseph", "London", "On", 1000);
+INSERT INTO hospital(hospital_code, name, city, province, bedsNum) VALUES ("ABC", "Victoria", "London", "On", 1600);
+INSERT INTO hospital(hospital_code, name, city, province, bedsNum) VALUES ("DDE", "Victoria", "Victoria", "BC", 1200);
+SELECT * FROM hospital;
+
+-- Update the foreign key of the doctor table
+UPDATE doctor SET work_at = "BBC" WHERE licenseNum = "RD34";
+UPDATE doctor SET work_at = "BBC" WHERE licenseNum = "GD56";
+UPDATE doctor SET work_at = "DDE" WHERE licenseNum = "HT45";
+UPDATE doctor SET work_at = "DDE" WHERE licenseNum = "YT67";
+UPDATE doctor SET work_at = "BBC" WHERE licenseNum = "JK78";
+UPDATE doctor SET work_at = "ABC" WHERE licenseNum = "SE66";
+SELECT * FROM doctor;
+
+-- Complete the insert of the hospital table
+UPDATE hospital SET headNum = "GD56", begin_date = "1999-09-10" WHERE hospital_code = "BBC";
+UPDATE hospital SET headNum = "YT67", begin_date = "1997-12-07" WHERE hospital_code = "DDE";
+UPDATE hospital SET headNum = "SE66", begin_date = "1994-12-05" WHERE hospital_code = "ABC";
+SELECT * FROM hospital;
+
+-- Insert data into treat table
+SELECT * FROM treat;
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(110112113, "GD56");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(444555666, "HT45");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(444555666, "JK78");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(111222333, "SE66");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(111222333, "YT67");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(111222333, "JK78");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(333444555, "GD56");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(667766777, "YT67");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(667766777, "JK78");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(667766777, "GD56");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(111222111, "YT67");
+INSERT INTO treat (patientOHIP,  doctorNum) VALUES(250916374, "HT45");
+SELECT * FROM treat;
+
+-- Change the data so that patient 111222111 has a last name of Brown
+UPDATE patient SET lastname = "Brown" WHERE OHIP = "111222111";
+SELECT * FROM patient;
+
+-- Change the data so that every patient who had Dr. Spock as a doctor treating them, now has Dr. Clooney instead
+SELECT * FROM treat;
+UPDATE treat SET doctorNum = (SELECT licenseNum FROM doctor WHERE lastname = "Clooney") WHERE doctorNum = (SELECT licenseNum FROM doctor WHERE lastname = "Spock");

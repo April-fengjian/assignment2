@@ -1,0 +1,36 @@
+-- List all the current databases
+SHOW databases;
+
+-- Delete the database called yourwesternuseridassign2db if it exists
+DROP DATABASE IF EXISTS zbeiassign2db;
+
+-- Create database
+CREATE DATABASE zbeiassign2db;
+
+-- Connect to the database
+USE zbeiassign2db;
+
+
+GRANT USAGE ON *.* TO 'ta'@'localhost';
+DROP USER 'ta'@'localhost';
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319';
+GRANT ALL PRIVILEGES ON zbeiassign2db.* TO 'ta'@'localhost';
+FLUSH PRIVILEGES;
+
+-- List all the tables
+SHOW TABLES;
+
+-- Create tables
+CREATE TABLE doctor (licenseNum VARCHAR(20) NOT NULL, firstname VARCHAR(20), lastname VARCHAR(20), specially VARCHAR(20), licensed_date DATE, work_at VARCHAR(20), PRIMARY KEY (licenseNum));
+
+CREATE TABLE hospital (hospital_code VARCHAR(20), name VARCHAR(20), city VARCHAR(20), province VARCHAR(20), bedsNum INT NOT NULL, headNum VARCHAR(20), begin_date DATE,PRIMARY KEY (hospital_code), FOREIGN KEY(headNum) REFERENCES doctor(licenseNum));
+
+ALTER TABLE doctor ADD FOREIGN KEY (work_at) REFERENCES hospital(hospital_code);
+
+CREATE TABLE patient (OHIP INT NOT NULL, firstname VARCHAR(20), lastname VARCHAR(20), PRIMARY KEY (OHIP));
+
+CREATE TABLE treat (doctorNum VARCHAR(20), patientOHIP INT NOT NULL, FOREIGN KEY (doctorNum) REFERENCES doctor(licenseNum) ON DELETE CASCADE, FOREIGN KEY (patientOHIP) REFERENCES patient(OHIP), PRIMARY KEY(patientOHIP,doctorNum));
+
+-- List the tables again
+SHOW TABLES;
+

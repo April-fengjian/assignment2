@@ -1,0 +1,110 @@
+Warning: Using a password on the command line interface can be insecure.
+ERROR 1451 (23000) at line 7: Cannot delete or update a parent row: a foreign key constraint fails (`zbeiassign2db`.`hospital`, CONSTRAINT `hospital_ibfk_1` FOREIGN KEY (`headNum`) REFERENCES `doctor` (`licenseNum`))
+--------------
+DELETE FROM doctor WHERE licensed_date < "1965-01-01"
+--------------
+
+--------------
+CREATE VIEW newtable 
+AS SELECT patient.firstname AS 'patientfirstname', patient.lastname AS 'patientlastname', doctor.lastname AS 'doctorlastname', hospital.name AS 'hospitalname'
+FROM patient JOIN treat ON patient.OHIP = treat.patientOHIP JOIN hospital ON  hospital.headNum = treat.doctorNum JOIN doctor ON hospital.headNum = doctor.licenseNum WHERE hospital.begin_date > "1995-12-31"
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+SELECT * FROM newtable
+--------------
+
++------------------+-----------------+----------------+--------------+
+| patientfirstname | patientlastname | doctorlastname | hospitalname |
++------------------+-----------------+----------------+--------------+
+| Bill             | Gellar          | Shabado        | St.Joseph    |
+| Colleen          | Gellar          | Shabado        | St.Joseph    |
+| Scotty           | Bing            | Shabado        | St.Joseph    |
++------------------+-----------------+----------------+--------------+
+3 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM doctor
+--------------
+
++------------+-----------+------------+--------------+---------------+---------+
+| licenseNum | firstname | lastname   | specially    | licensed_date | work_at |
++------------+-----------+------------+--------------+---------------+---------+
+| GD56       | Joey      | Shabado    | Podiatrist   | 1960-06-24    | BBC     |
+| HT45       | Ross      | Clooney    | Surgeon      | 1987-06-20    | DDE     |
+| JK78       | Mandy     | Webster    | Surgeon      | 1990-08-08    | BBC     |
+| RD34       | Bernie    | Kavorikian | Urologist    | 1980-09-09    | BBC     |
+| SE66       | Colleen   | Aziz       | Surgeon      | 1989-08-24    | ABC     |
+| YT67       | Ben       | Spock      | Pediatrician | 1955-02-20    | DDE     |
+| ZB88       | April     | Bei        | Pediatrician | 1998-05-08    | NULL    |
++------------+-----------+------------+--------------+---------------+---------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM treat
+--------------
+
++-----------+-------------+
+| doctorNum | patientOHIP |
++-----------+-------------+
+| GD56      |   110112113 |
+| GD56      |   333444555 |
+| GD56      |   667766777 |
+| HT45      |   111222111 |
+| HT45      |   111222333 |
+| HT45      |   250916374 |
+| HT45      |   444555666 |
+| HT45      |   667766777 |
+| JK78      |   111222333 |
+| JK78      |   444555666 |
+| JK78      |   667766777 |
+| SE66      |   111222333 |
++-----------+-------------+
+12 rows in set (0.00 sec)
+
+--------------
+DELETE FROM doctor WHERE lastname = "Clooney"
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+SELECT * FROM doctor
+--------------
+
++------------+-----------+------------+--------------+---------------+---------+
+| licenseNum | firstname | lastname   | specially    | licensed_date | work_at |
++------------+-----------+------------+--------------+---------------+---------+
+| GD56       | Joey      | Shabado    | Podiatrist   | 1960-06-24    | BBC     |
+| JK78       | Mandy     | Webster    | Surgeon      | 1990-08-08    | BBC     |
+| RD34       | Bernie    | Kavorikian | Urologist    | 1980-09-09    | BBC     |
+| SE66       | Colleen   | Aziz       | Surgeon      | 1989-08-24    | ABC     |
+| YT67       | Ben       | Spock      | Pediatrician | 1955-02-20    | DDE     |
+| ZB88       | April     | Bei        | Pediatrician | 1998-05-08    | NULL    |
++------------+-----------+------------+--------------+---------------+---------+
+6 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM doctor
+--------------
+
++------------+-----------+------------+--------------+---------------+---------+
+| licenseNum | firstname | lastname   | specially    | licensed_date | work_at |
++------------+-----------+------------+--------------+---------------+---------+
+| GD56       | Joey      | Shabado    | Podiatrist   | 1960-06-24    | BBC     |
+| JK78       | Mandy     | Webster    | Surgeon      | 1990-08-08    | BBC     |
+| RD34       | Bernie    | Kavorikian | Urologist    | 1980-09-09    | BBC     |
+| SE66       | Colleen   | Aziz       | Surgeon      | 1989-08-24    | ABC     |
+| YT67       | Ben       | Spock      | Pediatrician | 1955-02-20    | DDE     |
+| ZB88       | April     | Bei        | Pediatrician | 1998-05-08    | NULL    |
++------------+-----------+------------+--------------+---------------+---------+
+6 rows in set (0.00 sec)
+
+ERROR 1451 (23000) at line 31: Cannot delete or update a parent row: a foreign key constraint fails (`zbeiassign2db`.`hospital`, CONSTRAINT `hospital_ibfk_1` FOREIGN KEY (`headNum`) REFERENCES `doctor` (`licenseNum`))
+--------------
+DELETE FROM doctor WHERE specially = "Surgeon"
+--------------
+
+Bye

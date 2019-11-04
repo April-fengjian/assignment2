@@ -1,0 +1,33 @@
+-- Connect to the database
+USE zbeiassign2db;
+
+-- Delete any doctor who got his/her license before Jan 1, 1965
+-- It will cause error because the doctor license before Jan 1, 1965 is the head in their hospital
+-- which is an foreign key in hospital table, and did not do a cascade delete
+DELETE FROM doctor WHERE licensed_date < "1965-01-01";
+
+-- Create a view that shows the all the patients first names and last names who are treated by the heads of hospitals, that were made heads after Dec 31, 1995. In this view, also display the doctor's last name and the hospital name. 
+CREATE VIEW newtable 
+AS SELECT patient.firstname AS 'patientfirstname', patient.lastname AS 'patientlastname', doctor.lastname AS 'doctorlastname', hospital.name AS 'hospitalname'
+FROM patient JOIN treat ON patient.OHIP = treat.patientOHIP JOIN hospital ON  hospital.headNum = treat.doctorNum JOIN doctor ON hospital.headNum = doctor.licenseNum WHERE hospital.begin_date > "1995-12-31";
+
+-- Prove
+SELECT * FROM newtable;
+
+-- Show all the data in the doctor table and show all the data in the treats table
+SELECT * FROM doctor;
+SELECT * FROM treat;
+
+-- Delete the doctor with a last name of Clooney
+DELETE FROM doctor WHERE lastname = "Clooney";
+
+-- Prove that the delete worked by showing the doctors table again
+SELECT * FROM doctor;
+
+-- Show the doctors table again 
+SELECT * FROM doctor;
+
+-- Then try to delete all the Surgeon
+DELETE FROM doctor WHERE specially = "Surgeon";
+-- the delete command did not delete the rows because one of the doctor specialize in Surgeon is the head of the hospital
+-- which is a foreign key in the hospital table, and did not do a cascade delete
